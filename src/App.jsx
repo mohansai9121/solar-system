@@ -4,9 +4,14 @@ import {
   ScrollControls,
   useTexture,
   Stars,
+  Text,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useState } from "react";
+import Cosmonaut from "./3d-Models/Cosmonaut.jsx";
+import Asteroids from "./3d-Models/Asteroids.jsx";
+import Spaceship from "./3d-Models/Spaceship.jsx";
+import Astronaut from "./3d-Models/Astronaut.jsx";
 
 const degToRad = (degrees) => degrees * (Math.PI / 180);
 
@@ -459,7 +464,7 @@ const App = () => {
         <color attach="background" args={["#000008"]} />
 
         {/* Enhanced Lighting */}
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.5} />
         <pointLight
           position={[0, 0, 0]}
           intensity={5}
@@ -493,70 +498,71 @@ const App = () => {
           enableZoom
           enableDamping
           autoRotate
-          autoRotateSpeed={0.5}
-          maxDistance={50}
-          minDistance={5}
+          enablePan={true}
+          autoRotateSpeed={0.05}
+          maxDistance={55}
+          minDistance={-4}
         />
 
-        <ScrollControls pages={3} damping={2}>
+        <ScrollControls pages={1} damping={2}>
           <Scroll html>
-            <div>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "10vh",
-                  left: "50vw",
-                  transform: "translateX(-50%)",
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                <h3>Welcome to Our Solar System</h3>
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "100vh",
-                  left: "20vw",
-                  color: "white",
-                }}
-              >
-                <h1>This is 2nd page</h1>
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "150vh",
-                  left: "60vw",
-                  color: "white",
-                }}
-              >
-                <h1>This is 3rd page</h1>
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "200vh",
-                  left: "30vw",
-                  color: "white",
-                }}
-              >
-                <h1>This is 4th page</h1>
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "250vh",
-                  left: "70vw",
-                  color: "white",
-                }}
-              >
-                <h1>This is 5th page</h1>
-              </div>
+            <div style={{ position: "absolute", top: "0", left: "30vw" }}>
+              <pre>Explore the Solar System</pre>
             </div>
           </Scroll>
 
           <Scroll>
+            <Text
+              fontSize={0.2}
+              color="white"
+              position={[-5, 2.5, 5.5]}
+              rotation={[0, Math.PI / 4, 0]}
+              anchorX="right"
+            >
+              Hi!
+            </Text>
+            <Text
+              fontSize={0.2}
+              color="white"
+              position={[-5, 2.2, 5.5]}
+              rotation={[0, Math.PI / 4, 0]}
+              anchorX="right"
+            >
+              I am Mohan Sai
+            </Text>
+            <Text
+              fontSize={0.2}
+              color="white"
+              position={[-5, 1.9, 5.5]}
+              rotation={[0, Math.PI / 4, 0]}
+              anchorX="right"
+            >
+              I am here to explore Solar System
+            </Text>
+
+            <Text
+              fontSize={0.15}
+              color="white"
+              position={[6, 0.5, -7]}
+              rotation={[0, Math.PI / 4, 0]}
+              anchorX="center"
+            >
+              Hi!
+            </Text>
+            <Text
+              fontSize={0.15}
+              color="white"
+              position={[6, 0.2, -7]}
+              rotation={[0, Math.PI / 4, 0]}
+              anchorX="center"
+            >
+              I am Mohan&apos;s assistant
+            </Text>
+
+            <Astronaut />
+            <Cosmonaut />
+            <Spaceship />
+            <Asteroids />
             <Sun onPlanetClick={handlePlanetClick} />
             <OrbitalRing radius={4} color={ORBITAL_COLORS.mercury} />
             <OrbitalRing radius={7} color={ORBITAL_COLORS.venus} />
