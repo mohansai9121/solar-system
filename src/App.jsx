@@ -21,7 +21,7 @@ const Sun = () => {
 
   useFrame(() => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += 0.002;
+      meshRef.current.rotation.y += 0.002 / 4;
     }
   });
 
@@ -82,14 +82,14 @@ const Sun = () => {
 };
 
 const ORBITAL_SPEEDS = {
-  mercury: 0.004,
-  venus: 0.0035,
-  earth: 0.003,
-  mars: 0.0024,
-  jupiter: 0.0013,
-  saturn: 0.000969,
-  uranus: 0.000681,
-  neptune: 0.000543,
+  mercury: 0.004 / 4,
+  venus: 0.0035 / 4,
+  earth: 0.003 / 4,
+  mars: 0.0024 / 4,
+  jupiter: 0.0013 / 4,
+  saturn: 0.000969 / 4,
+  uranus: 0.000681 / 4,
+  neptune: 0.000543 / 4,
 };
 
 const ORBITAL_COLORS = {
@@ -234,7 +234,7 @@ const Mercury = () => {
     <RotatingPlanet
       size={0.4}
       texture={texture}
-      rotationSpeed={0.01}
+      rotationSpeed={0.01 / 4}
       planetInfo={PLANET_INFO.mercury}
       orbitalSpeed={ORBITAL_SPEEDS.mercury}
       orbitalRadius={4}
@@ -251,7 +251,7 @@ const Venus = () => {
     <RotatingPlanet
       size={0.9}
       texture={texture}
-      rotationSpeed={0.008}
+      rotationSpeed={0.008 / 4}
       planetInfo={PLANET_INFO.venus}
       orbitalSpeed={ORBITAL_SPEEDS.venus}
       orbitalRadius={7}
@@ -282,7 +282,7 @@ const EarthMoonSystem = () => {
       <RotatingPlanet
         size={1}
         texture={earthTexture}
-        rotationSpeed={0.02}
+        rotationSpeed={0.02 / 4}
         planetInfo={PLANET_INFO.earth}
         orbitalSpeed={0}
         orbitalRadius={0}
@@ -307,7 +307,7 @@ const Mars = () => {
     <RotatingPlanet
       size={0.5}
       texture={texture}
-      rotationSpeed={0.018}
+      rotationSpeed={0.018 / 4}
       planetInfo={PLANET_INFO.mars}
       orbitalSpeed={ORBITAL_SPEEDS.mars}
       orbitalRadius={13}
@@ -324,7 +324,7 @@ const Jupiter = () => {
     <RotatingPlanet
       size={2}
       texture={texture}
-      rotationSpeed={0.04}
+      rotationSpeed={0.04 / 4}
       planetInfo={PLANET_INFO.jupiter}
       orbitalSpeed={ORBITAL_SPEEDS.jupiter}
       orbitalRadius={17}
@@ -341,7 +341,7 @@ const Saturn = () => {
     <RotatingPlanet
       size={1.8}
       texture={texture}
-      rotationSpeed={0.038}
+      rotationSpeed={0.038 / 4}
       planetInfo={PLANET_INFO.saturn}
       orbitalSpeed={ORBITAL_SPEEDS.saturn}
       orbitalRadius={22}
@@ -367,7 +367,7 @@ const Uranus = () => {
     <RotatingPlanet
       size={1.2}
       texture={texture}
-      rotationSpeed={0.03}
+      rotationSpeed={0.03 / 4}
       planetInfo={PLANET_INFO.uranus}
       orbitalSpeed={ORBITAL_SPEEDS.uranus}
       orbitalRadius={26}
@@ -384,7 +384,7 @@ const Neptune = () => {
     <RotatingPlanet
       size={1.2}
       texture={texture}
-      rotationSpeed={0.032}
+      rotationSpeed={0.032 / 4}
       planetInfo={PLANET_INFO.neptune}
       orbitalSpeed={ORBITAL_SPEEDS.neptune}
       orbitalRadius={30}
