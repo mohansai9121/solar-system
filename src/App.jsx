@@ -15,39 +15,9 @@ import Astronaut from "./3d-Models/Astronaut.jsx";
 
 const degToRad = (degrees) => degrees * (Math.PI / 180);
 
-const InfoPanel = ({ info, position }) => {
-  if (!info) return null;
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: position[0],
-        top: position[1],
-        background: "rgba(0, 0, 0, 0.8)",
-        color: "white",
-        padding: "20px",
-        borderRadius: "10px",
-        maxWidth: "300px",
-        backdropFilter: "blur(5px)",
-        border: "1px solid rgba(255,255,255,0.1)",
-        transform: "translateX(-50%)",
-        zIndex: 1000,
-      }}
-    >
-      <h2>{info.name}</h2>
-      <p>{info.description}</p>
-      <ul>
-        {info.facts.map((fact, index) => (
-          <li key={index}>{fact}</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-const Sun = ({ onPlanetClick }) => {
+const Sun = () => {
   const meshRef = useRef();
+  const [sunClicked, setSunClicked] = useState(false);
 
   useFrame(() => {
     if (meshRef.current) {
@@ -64,17 +34,40 @@ const Sun = ({ onPlanetClick }) => {
       ref={meshRef}
       position={[0, 0, 0]}
       onClick={(e) => {
+        setSunClicked(!sunClicked);
         e.stopPropagation();
-        const { clientX, clientY } = e.nativeEvent;
-        onPlanetClick(PLANET_INFO.sun, [clientX, clientY]);
       }}
       onPointerOver={(e) => {
+        e.stopPropagation();
         document.body.style.cursor = "pointer";
       }}
       onPointerOut={(e) => {
+        e.stopPropagation();
         document.body.style.cursor = "auto";
       }}
     >
+      {sunClicked && (
+        <>
+          <Text
+            fontSize={0.2}
+            color="white"
+            position={[0, 4, 0]}
+            rotation={[0, Math.PI / 4, 0]}
+            anchorX="center"
+          >
+            The Sun,
+          </Text>
+          <Text
+            fontSize={0.2}
+            color="white"
+            position={[0, 3.5, 0]}
+            rotation={[0, Math.PI / 4, 0]}
+            anchorX="center"
+          >
+            the star at the center of our Solar System
+          </Text>
+        </>
+      )}
       <sphereGeometry args={[3, 32, 32]} />
       <meshBasicMaterial {...sunTexture} emissive="#FDB813" />
       <meshStandardMaterial
@@ -117,10 +110,10 @@ const RotatingPlanet = ({
   rotationSpeed = 0.02,
   children,
   planetInfo,
-  onPlanetClick,
   orbitalSpeed,
   orbitalRadius,
 }) => {
+  const [planetClicked, setPlanetClicked] = useState(false);
   const meshRef = useRef();
   const groupRef = useRef();
   const [angle, setAngle] = useState(Math.random() * Math.PI * 2);
@@ -145,16 +138,44 @@ const RotatingPlanet = ({
           ref={meshRef}
           onClick={(e) => {
             e.stopPropagation();
-            const { clientX, clientY } = e.nativeEvent;
-            onPlanetClick(planetInfo, [clientX, clientY]);
+            setPlanetClicked(!planetClicked);
           }}
           onPointerOver={(e) => {
+            e.stopPropagation();
             document.body.style.cursor = "pointer";
           }}
           onPointerOut={(e) => {
+            e.stopPropagation();
             document.body.style.cursor = "auto";
           }}
         >
+          {planetClicked && (
+            <>
+              <Text
+                fontSize={0.4}
+                color="white"
+                position={[0, size + 1.5, 0]}
+                rotation={[0, Math.PI / 4, 0]}
+                anchorX="center"
+                anchorY="middle"
+              >
+                {planetInfo.name}
+              </Text>
+              <Text
+                fontSize={0.2}
+                color="white"
+                position={[0, size + 1, 0]}
+                rotation={[0, Math.PI / 4, 0]}
+                anchorX="center"
+                anchorY="middle"
+                maxWidth={5}
+                textAlign="center"
+              >
+                {planetInfo.description}
+              </Text>
+            </>
+          )}
+
           <sphereGeometry args={[size, 32, 32]} />
           <meshStandardMaterial {...texture} metalness={0.2} roughness={0.8} />
           {children}
@@ -168,89 +189,43 @@ const PLANET_INFO = {
   sun: {
     name: "The Sun",
     description: "The star at the center of our Solar System",
-    facts: [
-      "Surface Temperature: 5,500°C",
-      "Age: 4.6 billion years",
-      "Type: Yellow Dwarf Star",
-      "Mass: 333,000 x Earth",
-    ],
   },
   mercury: {
     name: "Mercury",
     description: "The smallest and innermost planet in the Solar System",
-    facts: [
-      "Distance from Sun: 57.9 million km",
-      "Surface Temperature: -180°C to 430°C",
-      "Day length: 176 Earth days",
-    ],
   },
   venus: {
     name: "Venus",
     description:
       "The second planet from the Sun and Earth's closest planetary neighbor",
-    facts: [
-      "Surface Temperature: 462°C",
-      "Similar in size to Earth",
-      "Rotates backwards compared to most planets",
-    ],
   },
   earth: {
     name: "Earth",
     description: "Our home planet and the only known planet with life",
-    facts: [
-      "Average Temperature: 15°C",
-      "Only planet with liquid water on surface",
-      "Has one natural satellite: the Moon",
-    ],
   },
   mars: {
     name: "Mars",
     description: "The fourth planet from the Sun, known as the Red Planet",
-    facts: [
-      "Surface Temperature: -63°C",
-      "Has the largest volcano in the solar system",
-      "Two small moons: Phobos and Deimos",
-    ],
   },
   jupiter: {
     name: "Jupiter",
     description: "The largest planet in our Solar System",
-    facts: [
-      "Great Red Spot is a giant storm",
-      "Has at least 79 moons",
-      "Mass is more than twice that of all other planets combined",
-    ],
   },
   saturn: {
     name: "Saturn",
     description: "The sixth planet from the Sun, famous for its rings",
-    facts: [
-      "Rings are made mostly of ice and rock",
-      "Has 82 confirmed moons",
-      "Would float in a giant bathtub (less dense than water)",
-    ],
   },
   uranus: {
     name: "Uranus",
     description: "The seventh planet from the Sun",
-    facts: [
-      "Rotates on its side",
-      "Has 27 known moons",
-      "The coldest planetary atmosphere in the Solar System",
-    ],
   },
   neptune: {
     name: "Neptune",
     description: "The eighth and most distant planet from the Sun",
-    facts: [
-      "The windiest planet",
-      "Has 14 known moons",
-      "Takes 165 Earth years to orbit the Sun",
-    ],
   },
 };
 
-const Mercury = ({ onPlanetClick }) => {
+const Mercury = () => {
   const texture = useTexture({
     map: "/textures/mercury_map.jpg",
   });
@@ -261,14 +236,13 @@ const Mercury = ({ onPlanetClick }) => {
       texture={texture}
       rotationSpeed={0.01}
       planetInfo={PLANET_INFO.mercury}
-      onPlanetClick={onPlanetClick}
       orbitalSpeed={ORBITAL_SPEEDS.mercury}
       orbitalRadius={4}
     />
   );
 };
 
-const Venus = ({ onPlanetClick }) => {
+const Venus = () => {
   const texture = useTexture({
     map: "/textures/venus_map.jpg",
   });
@@ -279,14 +253,13 @@ const Venus = ({ onPlanetClick }) => {
       texture={texture}
       rotationSpeed={0.008}
       planetInfo={PLANET_INFO.venus}
-      onPlanetClick={onPlanetClick}
       orbitalSpeed={ORBITAL_SPEEDS.venus}
       orbitalRadius={7}
     />
   );
 };
 
-const EarthMoonSystem = ({ onPlanetClick }) => {
+const EarthMoonSystem = () => {
   const groupRef = useRef();
   const [angle, setAngle] = useState(Math.random() * Math.PI * 2);
   const earthTexture = useTexture({
@@ -311,7 +284,6 @@ const EarthMoonSystem = ({ onPlanetClick }) => {
         texture={earthTexture}
         rotationSpeed={0.02}
         planetInfo={PLANET_INFO.earth}
-        onPlanetClick={onPlanetClick}
         orbitalSpeed={0}
         orbitalRadius={0}
       >
@@ -326,7 +298,7 @@ const EarthMoonSystem = ({ onPlanetClick }) => {
   );
 };
 
-const Mars = ({ onPlanetClick }) => {
+const Mars = () => {
   const texture = useTexture({
     map: "/textures/mars_map.jpg",
   });
@@ -337,14 +309,13 @@ const Mars = ({ onPlanetClick }) => {
       texture={texture}
       rotationSpeed={0.018}
       planetInfo={PLANET_INFO.mars}
-      onPlanetClick={onPlanetClick}
       orbitalSpeed={ORBITAL_SPEEDS.mars}
       orbitalRadius={13}
     />
   );
 };
 
-const Jupiter = ({ onPlanetClick }) => {
+const Jupiter = () => {
   const texture = useTexture({
     map: "/textures/jupiter_map.jpg",
   });
@@ -355,14 +326,13 @@ const Jupiter = ({ onPlanetClick }) => {
       texture={texture}
       rotationSpeed={0.04}
       planetInfo={PLANET_INFO.jupiter}
-      onPlanetClick={onPlanetClick}
       orbitalSpeed={ORBITAL_SPEEDS.jupiter}
       orbitalRadius={17}
     />
   );
 };
 
-const Saturn = ({ onPlanetClick }) => {
+const Saturn = () => {
   const texture = useTexture({
     map: "/textures/saturn_map.jpg",
   });
@@ -373,7 +343,6 @@ const Saturn = ({ onPlanetClick }) => {
       texture={texture}
       rotationSpeed={0.038}
       planetInfo={PLANET_INFO.saturn}
-      onPlanetClick={onPlanetClick}
       orbitalSpeed={ORBITAL_SPEEDS.saturn}
       orbitalRadius={22}
     >
@@ -389,7 +358,7 @@ const Saturn = ({ onPlanetClick }) => {
   );
 };
 
-const Uranus = ({ onPlanetClick }) => {
+const Uranus = () => {
   const texture = useTexture({
     map: "/textures/uranus_map.jpg",
   });
@@ -400,14 +369,13 @@ const Uranus = ({ onPlanetClick }) => {
       texture={texture}
       rotationSpeed={0.03}
       planetInfo={PLANET_INFO.uranus}
-      onPlanetClick={onPlanetClick}
       orbitalSpeed={ORBITAL_SPEEDS.uranus}
       orbitalRadius={26}
     />
   );
 };
 
-const Neptune = ({ onPlanetClick }) => {
+const Neptune = () => {
   const texture = useTexture({
     map: "/textures/neptune_map.jpg",
   });
@@ -418,7 +386,6 @@ const Neptune = ({ onPlanetClick }) => {
       texture={texture}
       rotationSpeed={0.032}
       planetInfo={PLANET_INFO.neptune}
-      onPlanetClick={onPlanetClick}
       orbitalSpeed={ORBITAL_SPEEDS.neptune}
       orbitalRadius={30}
     />
@@ -435,25 +402,13 @@ const OrbitalRing = ({ radius, color }) => {
 };
 
 const App = () => {
-  const [selectedPlanet, setSelectedPlanet] = useState(null);
-  const [infoPosition, setInfoPosition] = useState([0, 0]);
-
-  const handlePlanetClick = (planetInfo, position) => {
-    setSelectedPlanet(planetInfo);
-    setInfoPosition(position);
-  };
-
-  const handleCanvasClick = () => {
-    setSelectedPlanet(null);
-  };
+  const [spaceshipClicked, setSpaceshipClicked] = useState(false);
 
   return (
     <div>
-      <InfoPanel info={selectedPlanet} position={infoPosition} />
       <Canvas
         style={{ width: "100vw", height: "100vh", background: "black" }}
-        onClick={handleCanvasClick}
-        camera={{ position: [0, 20, 35], fov: 60 }}
+        camera={{ position: [0, 5, 15], fov: 60 }}
         raycaster={{
           computeOffsets: (e) => ({
             offsetX: e.clientX,
@@ -464,7 +419,7 @@ const App = () => {
         <color attach="background" args={["#000008"]} />
 
         {/* Enhanced Lighting */}
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.9} />
         <pointLight
           position={[0, 0, 0]}
           intensity={5}
@@ -507,7 +462,9 @@ const App = () => {
         <ScrollControls pages={1} damping={2}>
           <Scroll html>
             <div style={{ position: "absolute", top: "0", left: "30vw" }}>
-              <pre>Explore the Solar System</pre>
+              <pre>
+                Explore the Solar System, click on the planets to know more
+              </pre>
             </div>
           </Scroll>
 
@@ -522,7 +479,7 @@ const App = () => {
               Hi!
             </Text>
             <Text
-              fontSize={0.2}
+              fontSize={0.25}
               color="white"
               position={[-5, 2.2, 5.5]}
               rotation={[0, Math.PI / 4, 0]}
@@ -559,11 +516,23 @@ const App = () => {
               I am Mohan&apos;s assistant
             </Text>
 
+            {spaceshipClicked && (
+              <Text
+                fontSize={0.2}
+                color="white"
+                position={[6, 3.5, -1]}
+                rotation={[0, Math.PI / 4, 0]}
+                anchorX="center"
+              >
+                Spaceship, the vehicle that takes us to the planets
+              </Text>
+            )}
+
             <Astronaut />
             <Cosmonaut />
-            <Spaceship />
+            <Spaceship onClick={() => setSpaceshipClicked(!spaceshipClicked)} />
             <Asteroids />
-            <Sun onPlanetClick={handlePlanetClick} />
+            <Sun />
             <OrbitalRing radius={4} color={ORBITAL_COLORS.mercury} />
             <OrbitalRing radius={7} color={ORBITAL_COLORS.venus} />
             <OrbitalRing radius={10} color={ORBITAL_COLORS.earth} />
@@ -572,14 +541,14 @@ const App = () => {
             <OrbitalRing radius={22} color={ORBITAL_COLORS.saturn} />
             <OrbitalRing radius={26} color={ORBITAL_COLORS.uranus} />
             <OrbitalRing radius={30} color={ORBITAL_COLORS.neptune} />
-            <Mercury onPlanetClick={handlePlanetClick} />
-            <Venus onPlanetClick={handlePlanetClick} />
-            <EarthMoonSystem onPlanetClick={handlePlanetClick} />
-            <Mars onPlanetClick={handlePlanetClick} />
-            <Jupiter onPlanetClick={handlePlanetClick} />
-            <Saturn onPlanetClick={handlePlanetClick} />
-            <Uranus onPlanetClick={handlePlanetClick} />
-            <Neptune onPlanetClick={handlePlanetClick} />
+            <Mercury />
+            <Venus />
+            <EarthMoonSystem />
+            <Mars />
+            <Jupiter />
+            <Saturn />
+            <Uranus />
+            <Neptune />
           </Scroll>
         </ScrollControls>
       </Canvas>
